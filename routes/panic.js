@@ -1,10 +1,6 @@
 import express from "express";
 import UserLocation from "../models/userLocation.js";
 import { v4 as uuidv4 } from "uuid";
-router.get("/test", (req, res) => {
-  res.json({ message: "✅ Panic routes are working" });
-});
-
 
 const router = express.Router();
 
@@ -28,4 +24,20 @@ router.post("/panic", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-  export default router;
+
+// 🔹 Fetch all panic locations (GET)
+router.get("/panic", async (req, res) => {
+  try {
+    const locations = await UserLocation.find().sort({ updatedAt: -1 });
+    res.json(locations);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 🔹 Optional health check
+router.get("/test", (req, res) => {
+  res.json({ message: "✅ Panic routes are working" });
+});
+
+export default router;
