@@ -1,6 +1,10 @@
 import express from "express";
 import UserLocation from "../models/userLocation.js";
-import { v4 as uuidv4 } from "uuid"; // ✅ for generating unique IDs
+import { v4 as uuidv4 } from "uuid";
+router.get("/test", (req, res) => {
+  res.json({ message: "✅ Panic routes are working" });
+});
+
 
 const router = express.Router();
 
