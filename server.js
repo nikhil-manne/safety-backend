@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import panicRoutes from "./routes/panic.js"; // <-- your panic routes
+import panicRoutes from "./routes/panic.js";
+import authRoutes from "./routes/auth.js";
 
 // Load environment variables
 dotenv.config();
@@ -19,6 +20,12 @@ app.use(
 app.use(express.json());
 
 // Routes
+app.use("/api", panicRoutes);
+app.use("/api/auth", authRoutes);
+import authRoutes from "./routes/auth.js";
+
+// Routes
+app.use("/api/auth", authRoutes);
 app.use("/api", panicRoutes);
 
 // MongoDB connection
