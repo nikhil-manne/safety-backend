@@ -22,7 +22,6 @@ app.use(express.json());
 // Routes
 app.use("/api", panicRoutes);
 app.use("/api/auth", authRoutes);
-import authRoutes from "./routes/auth.js";
 
 // Routes
 app.use("/api/auth", authRoutes);
