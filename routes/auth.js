@@ -51,14 +51,5 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Get all users (without passwords)
-router.get("/users", async (req, res) => {
-  try {
-    const users = await User.find().select("-password"); // don’t return passwords
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 export default router;
+
