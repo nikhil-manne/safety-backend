@@ -20,12 +20,8 @@ app.use(
 app.use(express.json());
 
 // Routes
-app.use("/api", panicRoutes);
-app.use("/api/auth", authRoutes);
-
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api", panicRoutes);
+app.use("/api", panicRoutes);       // panic routes
+app.use("/api/auth", authRoutes);   // auth routes
 
 // MongoDB connection
 const mongoURI = process.env.MONGO_URI;
