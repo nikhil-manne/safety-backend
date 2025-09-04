@@ -12,7 +12,6 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({ error: "Username and password required" });
     }
 
-    // Check if user exists
     const existing = await User.findOne({ username });
     if (existing) {
       return res.status(400).json({ error: "Username already exists" });
@@ -51,4 +50,15 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// ✅ New route: list users (testing only)
+router.get("/users", async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;
+
