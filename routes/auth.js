@@ -58,5 +58,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
+//users
+router.get("/users", async (req, res) => {
+  try {
+    const users = await User.find({}, "-password"); // exclude password
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;
+
 
