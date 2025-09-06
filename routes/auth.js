@@ -68,6 +68,34 @@ router.get("/users", async (req, res) => {
   }
 });
 
+// Update user profile
+router.put("/update/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { mobile, trustedContacts } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { mobile, trustedContacts },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.json({
+      message: "Profile updated successfully",
+      userId: user._id,
+      username: user.username,
+      mobile: user.mobile,
+      trustedContacts: user.trustedContacts,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 export default router;
+
 
 
