@@ -69,6 +69,7 @@ router.get("/users", async (req, res) => {
 });
 
 // Update user profile
+// Update user profile
 router.put("/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -94,8 +95,11 @@ router.put("/update/:id", async (req, res) => {
   }
 });
 
+  
+
 
 export default router;
+
 
 
 
