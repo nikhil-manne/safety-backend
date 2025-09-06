@@ -6,24 +6,32 @@ const router = express.Router();
 // Signup
 router.post("/signup", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, mobile, trustedContacts } = req.body;
 
-    if (!username || !password) {
-      return res.status(400).json({ error: "Username and password required" });
+    if (!username || !password || !mobile) {
+      return res.status(400).json({ error: "Username, password and mobile required" });
     }
 
+    // Check if user exists
     const existing = await User.findOne({ username });
     if (existing) {
       return res.status(400).json({ error: "Username already exists" });
     }
 
-    const user = new User({ username, password });
+    const user = new User({
+      username,
+      password,
+      mobile,
+      trustedContacts: trustedContacts || [],
+    });
     await user.save();
 
     res.status(201).json({
       message: "Signup successful",
       userId: user._id,
       username: user.username,
+      mobile: user.mobile,
+      trustedContacts: user.trustedContacts,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -45,16 +53,6 @@ router.post("/login", async (req, res) => {
       userId: user._id,
       username: user.username,
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ✅ New route: list users (testing only)
-router.get("/users", async (req, res) => {
-  try {
-    const users = await User.find().select("-password");
-    res.json(users);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
