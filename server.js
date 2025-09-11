@@ -5,6 +5,7 @@ import cors from "cors";
 import uploadRoutes from "./routes/upload.js";
 import panicRoutes from "./routes/panic.js";
 import authRoutes from "./routes/auth.js";
+import routeRouter from "./routes/route.js";
 
 // Load environment variables
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api", panicRoutes);       // panic routes
 app.use("/api/auth", authRoutes); 
 app.use("/api/upload", uploadRoutes);  // auth routes
+app.use("/route", routeRouter);
 
 // MongoDB connection
 const mongoURI = process.env.MONGO_URI;
