@@ -1,13 +1,12 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
+  username: { type: String, required: true }, // removed unique:true
   password: { type: String, required: true },
-  mobile: { type: String, required: true },  // new
+  mobile: { type: String, required: true, unique: true }, // enforce unique mobile instead
   trustedContacts: [{ type: String }],
-  driverIdPhoto: { type: String }, // will hold Cloudinary URL
-       // new array for contacts
 });
 
 const User = mongoose.model("User", UserSchema);
 export default User;
+
