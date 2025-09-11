@@ -1,6 +1,5 @@
 // routes/route.js
 import express from "express";
-import fetch from "node-fetch";
 
 const router = express.Router();
 
@@ -12,14 +11,14 @@ router.get("/", async (req, res) => {
       return res.status(400).json({ error: "Origin and destination required" });
     }
 
-    const GOOGLE_MAPS_KEY = process.env.GOOGLE_MAPS_KEY; // keep in .env
+    const GOOGLE_MAPS_KEY = process.env.GOOGLE_MAPS_KEY;
     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(
       origin
     )}&destination=${encodeURIComponent(
       destination
     )}&mode=driving&key=${GOOGLE_MAPS_KEY}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url); // ✅ built-in fetch
     const data = await response.json();
 
     if (!data.routes || data.routes.length === 0) {
