@@ -3,19 +3,23 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-// Signup
+// ----------------- Signup -----------------
 router.post("/signup", async (req, res) => {
   try {
     const { username, password, mobile, trustedContacts } = req.body;
 
     if (!username || !password || !mobile) {
-      return res.status(400).json({ error: "Username, password and mobile required" });
+      return res
+        .status(400)
+        .json({ error: "Username, password and mobile required" });
     }
 
-    // Check if user exists
-    const existing = await User.findOne({ username });
-    if (existing) {
-      return res.status(400).json({ error: "Username already exists" });
+    // Ensure mobile is unique
+    const existingMobile = await User.findOne({ mobile });
+    if (existingMobile) {
+      return res
+        .status(400)
+        .json({ error: "Mobile number already registered" });
     }
 
     const user = new User({
@@ -24,6 +28,7 @@ router.post("/signup", async (req, res) => {
       mobile,
       trustedContacts: trustedContacts || [],
     });
+
     await user.save();
 
     res.status(201).json({
@@ -38,27 +43,32 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// Login
+// ----------------- Login -----------------
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { mobile, password } = req.body;
 
-    const user = await User.findOne({ username, password });
+    if (!mobile || !password) {
+      return res.status(400).json({ error: "Mobile and password required" });
+    }
+
+    const user = await User.findOne({ mobile, password });
     if (!user) {
-      return res.status(400).json({ error: "Invalid credentials" });
+      return res.status(400).json({ error: "Invalid mobile or password" });
     }
 
     res.json({
       message: "Login successful",
       userId: user._id,
       username: user.username,
+      mobile: user.mobile,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-//users
+// ----------------- Get all users -----------------
 router.get("/users", async (req, res) => {
   try {
     const users = await User.find({}, "-password"); // exclude password
@@ -68,12 +78,21 @@ router.get("/users", async (req, res) => {
   }
 });
 
-// Update user profile
-// Update user profile
+// ----------------- Update user profile -----------------
 router.put("/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { mobile, trustedContacts } = req.body;
+
+    // ensure mobile is not already used by another user
+    if (mobile) {
+      const existingMobile = await User.findOne({ mobile, _id: { $ne: id } });
+      if (existingMobile) {
+        return res
+          .status(400)
+          .json({ error: "Mobile number already registered by another user" });
+      }
+    }
 
     const user = await User.findByIdAndUpdate(
       id,
@@ -95,11 +114,4 @@ router.put("/update/:id", async (req, res) => {
   }
 });
 
-  
-
-
 export default router;
-
-
-
-
