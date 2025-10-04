@@ -21,10 +21,11 @@ app.use(
 app.use(express.json());
 
 // Routes
-app.use("/api", panicRoutes);       // panic routes
-app.use("/api/auth", authRoutes); 
-app.use("/api/upload", uploadRoutes);  // auth routes
+app.use("/api/panic", panicRoutes);   // ✅ mount correctly
+app.use("/api/auth", authRoutes);
+app.use("/api/upload", uploadRoutes);
 app.use("/route", routeRouter);
+
 
 // MongoDB connection
 const mongoURI = process.env.MONGO_URI;
