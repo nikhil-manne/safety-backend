@@ -1,4 +1,3 @@
-
 import express from "express";
 import UserLocation from "../models/userLocation.js";
 import Panic from "../models/panic.js";
@@ -64,10 +63,22 @@ router.get("/locations", async (req, res) => {
   }
 });
 
+// GET /api/panic - show all panic alerts (latest first)
+router.get("/", async (req, res) => {
+  try {
+    const panics = await Panic.find().sort({ createdAt: -1 });
+    res.status(200).json(panics);
+  } catch (error) {
+    console.error("Error fetching panic alerts:", error);
+    res.status(500).json({ message: "Error fetching panic alerts", error: error.message });
+  }
+});
+
 // Optional health check
 router.get("/test", (req, res) => {
   res.json({ message: "✅ Panic routes are working" });
 });
 
 export default router;
+
 
