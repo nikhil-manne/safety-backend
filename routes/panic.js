@@ -6,15 +6,11 @@ import { v4 as uuidv4 } from "uuid";
 
 const router = express.Router();
 
-// ✅ POST /api/panic - save panic alert
 router.post("/", async (req, res) => {
   try {
     const { userId, latitude, longitude, type } = req.body;
-
     if (!userId || latitude == null || longitude == null) {
-      return res.status(400).json({
-        error: "userId, latitude, and longitude are required",
-      });
+      return res.status(400).json({ error: "userId, latitude, and longitude are required" });
     }
 
     const alertId = uuidv4();
@@ -31,9 +27,7 @@ router.post("/", async (req, res) => {
     try {
       const user = await User.findById(userId).select("username");
       if (user) username = user.username;
-    } catch (e) {
-      /* ignore */
-    }
+    } catch (e) {}
 
     const newPanic = await Panic.create({
       userId,
@@ -41,42 +35,25 @@ router.post("/", async (req, res) => {
       location: { lat: latitude, lng: longitude },
     });
 
-    console.log("[PANIC RECEIVED]", {
-      alertId,
-      userId,
-      username,
-      latitude,
-      longitude,
-      type,
-      createdAt: new Date().toISOString(),
-    });
+    console.log("[PANIC RECEIVED]", { alertId, userId, username, latitude, longitude, type });
 
-    return res.status(201).json({
-      message: "Panic received",
-      alertId,
-      data: { newLoc, newPanic },
-    });
+    return res.status(201).json({ message: "Panic received", alertId });
   } catch (err) {
     console.error("Error in /panic:", err);
     return res.status(500).json({ error: "Server error saving panic" });
   }
 });
 
-// ✅ GET /api/panic - list all panic alerts
 router.get("/", async (req, res) => {
   try {
     const panics = await Panic.find().sort({ createdAt: -1 });
     res.status(200).json(panics);
   } catch (error) {
     console.error("Error fetching panic alerts:", error);
-    res.status(500).json({
-      message: "Error fetching panic alerts",
-      error: error.message,
-    });
+    res.status(500).json({ message: "Error fetching panic alerts", error: error.message });
   }
 });
 
-// ✅ Optional: /api/panic/locations - user locations
 router.get("/locations", async (req, res) => {
   try {
     const locations = await UserLocation.find().sort({ updatedAt: -1 });
@@ -86,9 +63,9 @@ router.get("/locations", async (req, res) => {
   }
 });
 
-// ✅ Optional: /api/panic/test
 router.get("/test", (req, res) => {
-  res.json({ message: "✅ Panic routes are working" });
+  res.json({ message: "✅ Panic routes working" });
 });
 
 export default router;
+
